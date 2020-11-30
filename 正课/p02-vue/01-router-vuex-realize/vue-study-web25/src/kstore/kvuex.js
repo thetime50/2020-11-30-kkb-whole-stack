@@ -18,8 +18,8 @@ class Store {
           let result = {}
           for(let index in options.getters){
             result[index] = options.getters[index](
-              this.$store._vm._data.$$state,
-              // this.$store._vm.$$getter ._computedWatchers.$$getter
+              this._data.$$state,
+              // this.$$getter //._computedWatchers.$$getter
             )//.call(this.$store)
           }
           return result
