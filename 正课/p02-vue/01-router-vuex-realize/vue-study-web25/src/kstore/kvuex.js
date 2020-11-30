@@ -12,6 +12,18 @@ class Store {
     this._vm = new Vue({
       data: {
         $$state: options.state
+      },
+      computed: {
+        $$getter(){
+          let result = {}
+          for(let index in options.getters){
+            result[index] = options.getters[index](
+              this.$store._vm._data.$$state,
+              // this.$store._vm.$$getter ._computedWatchers.$$getter
+            )//.call(this.$store)
+          }
+          return result
+        }
       }
     })
 
@@ -23,6 +35,11 @@ class Store {
   get state() {
     console.log(this._vm);
     return this._vm._data.$$state
+  }
+
+  get getters() {
+    console.log(this._vm);
+    return this._vm.$$getter //._computedWatchers.$$getter
   }
 
   set state(v) {
@@ -56,8 +73,8 @@ function install(_Vue) {
 
   Vue.mixin({
     beforeCreate() {
-      if (this.$options.store) {
-        Vue.prototype.$store = this.$options.store
+      if (this.$options.store) { 
+        Vue.prototype.$store = this.$options.store //new Vue({store})传进来的 class Store 实例
       }
     }
   })

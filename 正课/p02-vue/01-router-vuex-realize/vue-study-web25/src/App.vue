@@ -6,9 +6,22 @@
     </div>
     <p @click="$store.commit('add')">{{$store.state.counter}}</p>
     <p @click="$store.dispatch('add')">async: {{$store.state.counter}}</p>
+    <p>counterSquare:{{counterSquare}}</p>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  name:"app",
+  computed: {
+    counterSquare(){
+      console.log("*",this.$store.getters)
+      return this.$store.getters.counterSquare
+    }
+  }
+}
+</script>
 
 <style>
 #app {

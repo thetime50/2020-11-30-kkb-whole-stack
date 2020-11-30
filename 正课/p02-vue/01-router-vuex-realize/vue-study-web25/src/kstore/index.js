@@ -20,5 +20,11 @@ export default new Vuex.Store({
     }
   },
   modules: {
+  },
+  getters: {
+    // ...
+    counterSquare: (state, /* getters */) => {
+      return state.counter**2
+    }
   }
 })
