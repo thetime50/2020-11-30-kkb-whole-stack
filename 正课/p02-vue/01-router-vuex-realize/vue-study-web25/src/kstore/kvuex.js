@@ -11,7 +11,16 @@ class Store {
     // 2.响应式state
     this._vm = new Vue({
       data: {
-        $$state: options.state
+        $$state: options.state,
+
+        // 加了$ 就不能通过 _vm.$xxx 直接引用
+        // 要通过 _vm._data 引用
+        // _vm.$data 不是响应式的
+
+        // 响应式数据里都有个 __ob__ 属性 观察者
+        dbgData:"_vm.dbgData 直接引用测试",
+        $dbgData:"_vm.$dbgData 直接引用测试",
+        $$dbgData:"_vm.$$dbgData 直接引用测试",
       },
       computed: {
         $$getter(){
@@ -27,8 +36,8 @@ class Store {
       }
     })
 
-    this.commit = this.commit.bind(this)
-    this.dispatch = this.dispatch.bind(this)
+    this.commit = this.commit.bind(this) // commit 通过this 引用到vuex实例 绑定上下文环境 
+    this.dispatch = this.dispatch.bind(this) // dispatch 通过this 引用到vuex实例 绑定上下文环境 
 
   }
 
