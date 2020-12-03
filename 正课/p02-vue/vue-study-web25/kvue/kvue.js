@@ -197,6 +197,7 @@ class Compile {
         console.log('model',exp,e.target.value)
         this.$vm[exp] = e.target.value
       }).bind(this))
+      this.update(node, exp, 'model')
     }
   }
   modelUpdater(node, val) {
