@@ -65,6 +65,13 @@ function proxy(vm) {
       }
     })
   });
+  Object.keys(vm.$methods).forEach((key) => {
+    Object.defineProperty(vm, key, {
+      get() {
+        return vm.$methods[key].bind(vm)
+      },
+    })
+  });
 }
 
 class KVue {
@@ -72,6 +79,8 @@ class KVue {
     // 1.响应式
     this.$options = options
     this.$data = options.data
+    this.$methods = options.methods
+
     observe(this.$data)
 
     // 1.1代理
@@ -118,6 +127,10 @@ class Compile {
   isDir(attrName) {
     return attrName.startsWith('k-')
   }
+
+  isEvent(attrName){
+    return attrName.startsWith('@')
+  }
   
   // update: 给传入的node做初始化并创建watcher负责其更新
   update(node, exp, dir) {
@@ -155,6 +168,11 @@ class Compile {
         // 获取指令执行函数并调用
         const dir = attrName.substring(2)
         this[dir] && this[dir](node, exp)
+      }else if(this.isEvent(attrName)){
+        const dir = attrName.substring(1)
+        if(this.$vm[exp]){
+          node.addEventListener(dir,this.$vm[exp])
+        }
       }
     })
   }
@@ -170,6 +188,19 @@ class Compile {
   }
   htmlUpdater(node, val) {
     node.innerHTML = val
+  }
+
+  // k-mode
+  model(node, exp) {
+    if(/* node.nodeName=='INPUT' && */ this.$vm.$data.hasOwnProperty(exp)){//如果有对应的data 或 computed
+      node.addEventListener('input',(function(e){
+        console.log('model',exp,e.target.value)
+        this.$vm[exp] = e.target.value
+      }).bind(this))
+    }
+  }
+  modelUpdater(node, val) {
+    node.value = val
   }
 }
 

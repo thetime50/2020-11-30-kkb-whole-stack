@@ -4,6 +4,10 @@
   <p k-text="counter"></p>
   <p k-html="desc"></p>
   <input type="text" k-model="desc">
+  <p @click="fun">click put counter</p>
+  <p>input event<input type="text" @input='dbg'></p>
+  <p>edit<input type="text" k-model="edit">{{edit}}</p>
+  <p>edit<input type="text" k-model="edit">{{edit}}</p>
 </div>
 <script src="./kvue.js"></script>
 <script>
@@ -11,10 +15,19 @@
     el: '#app',
     data: {
       counter: 1,
-      desc: '<p>村长<span style="color: red">真棒</span></p>'
+      desc: '<p>村长<span style="color: red">真棒</span></p>',
+      edit:'233'
+    },
+    methods:{
+      dbg(...e){
+        console.log(...e)
+      },
+      fun(){
+        console.log('fun',this.counter)
+      },
     },
   })
-  setInterval(() => {
-    app.counter++
-  }, 1000);
+  // setInterval(() => {
+  //   app.counter++
+  // }, 1000);
 </script>
